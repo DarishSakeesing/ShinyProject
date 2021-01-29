@@ -35,7 +35,10 @@ cumulative_df <- read.csv('data/cumulative_sales.csv', header = T)
 library(dplyr)
 library(stringr)
 library(tidyr)
+library(lubridate)
+library(xts)
 
+# ---- Cleaning the 2012 data ----
 df_2012 <- df_2012 %>% 
   select(1:13) %>% 
   filter(X2012 != 'InsideEVs') %>% 
@@ -47,6 +50,9 @@ df_2012 <- df_2012 %>%
   mutate(Year = 2012) %>%
   select(Make, Model, Month, Year, Sales)
 
+
+
+# ---- Cleaning the 2013 data ----
 df_2013 <- df_2013 %>%
   select(1:13) %>% 
   filter(X2013 != 'InsideEVs') %>% 
@@ -58,6 +64,8 @@ df_2013 <- df_2013 %>%
   mutate(Year = 2013) %>%
   select(Make, Model, Month, Year, Sales)
 
+
+# ---- Cleaning the 2014 data ----
 df_2014 <- df_2014 %>%
   select(1:13) %>% 
   filter(X2014.US != 'InsideEVs' & X2014.US != 'Worldwide') %>% 
@@ -69,6 +77,8 @@ df_2014 <- df_2014 %>%
   mutate(Year = 2014) %>%
   select(Make, Model, Month, Year, Sales)
 
+
+# ---- Cleaning the 2015 data ----
 df_2015 <- df_2015 %>%
   select(1:13) %>% 
   filter(X2015.US != 'InsideEVs' & X2015.US != '2014 Results' & X2015.US != 'Worldwide*') %>% 
@@ -81,6 +91,8 @@ df_2015 <- df_2015 %>%
   select(Make, Model, Month, Year, Sales)
 
 
+
+# ---- Cleaning the 2016 data ----
 df_2016 <- df_2016 %>%
   select(1:13) %>% 
   filter(X2016.US != 'InsideEVs' & X2016.US != '2015 Results' & X2016.US != 'Worldwide*') %>% 
@@ -93,6 +105,8 @@ df_2016 <- df_2016 %>%
   select(Make, Model, Month, Year, Sales)
 
 
+
+# ---- Cleaning the 2017 data ----
 df_2017 <- df_2017 %>%
   select(1:13) %>% 
   filter(X2017.U.S..EV.SALES != '2017 U.S. Sales Totals' & X2017.U.S..EV.SALES != '2016 U.S. Sales Totals' & X2017.U.S..EV.SALES != '2017 Worldwide Sales*') %>% 
@@ -105,6 +119,7 @@ df_2017 <- df_2017 %>%
   select(Make, Model, Month, Year, Sales)
 
 
+# ---- Cleaning the 2018 data ----
 df_2018 <- df_2018 %>%
   select(1:13) %>% 
   filter(X2018.U.S..EV.SALES != '2018 U.S. Sales Totals' & X2018.U.S..EV.SALES != '2017 U.S. Sales Totals' & X2018.U.S..EV.SALES != '2018 Worldwide Sales*') %>% 
@@ -116,6 +131,8 @@ df_2018 <- df_2018 %>%
   mutate(Year = 2018) %>%
   select(Make, Model, Month, Year, Sales)
 
+
+# ---- Cleaning the 2019 data ----
 df_2019 <- df_2019 %>%
   select(2:14) %>% 
   filter(X != '2019 U.S. Sales Totals*' & X != '2018 U.S. Sales Totals*' & X != '2019 Worldwide Sales*' & X != '2018 Worldwide Sales*') %>% 
@@ -128,10 +145,31 @@ df_2019 <- df_2019 %>%
   select(Make, Model, Month, Year, Sales)
 
 
-
 df_2019[] <- lapply(df_2019, gsub, pattern = '\U0001f50b', replacement = '')
 
+```
+
+
+```{r fun}
+
+create_date <- function(df) {
+  df$Month = match(str_to_title(df$Month), month.abb)
+  df$Date <- as.yearmon(paste(df$Year, df$Month), "%Y %m")
+  df <- df %>%
+    select(Make, Model, Date, Sales)
   
+  return(df)
+}
+
+df_2012 <- create_date(df_2012)
+df_2013 <- create_date(df_2013)
+df_2014 <- create_date(df_2014)
+df_2015 <- create_date(df_2015)
+df_2016 <- create_date(df_2016)
+df_2017 <- create_date(df_2017)
+df_2018 <- create_date(df_2018)
+df_2019 <- create_date(df_2019)
+
 
 
 ```
