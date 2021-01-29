@@ -23,12 +23,115 @@ df_2015 <- read.csv('data/ev_2015.csv', header = T)
 df_2016 <- read.csv('data/ev_2016.csv', header = T)
 df_2017 <- read.csv('data/ev_2017.csv', header = T)
 df_2018 <- read.csv('data/ev_2018.csv', header = T)
-df_2018 <- read.csv('data/ev_2019.csv', header = T)
+df_2018 <- read.csv('data/ev_2018.csv', header = T)
+df_2019 <- read.csv('data/ev_2019.csv', header = T)
+
 
 cumulative_df <- read.csv('data/cumulative_sales.csv', header = T)
 
 ```
 
 ```{r Cleaning}
+library(dplyr)
+library(stringr)
+library(tidyr)
+
+df_2012 <- df_2012 %>% 
+  select(1:13) %>% 
+  filter(X2012 != 'InsideEVs') %>% 
+  rename(Make_Model = X2012) %>% 
+  mutate(Make = word(Make_Model, 1)) %>%
+  mutate(Model = word(Make_Model, 2, -1)) %>%
+  select(Make, Model, 2:13) %>%
+  pivot_longer(cols = 3:14, names_to = 'Month', values_to = 'Sales') %>%
+  mutate(Year = 2012) %>%
+  select(Make, Model, Month, Year, Sales)
+
+df_2013 <- df_2013 %>%
+  select(1:13) %>% 
+  filter(X2013 != 'InsideEVs') %>% 
+  rename(Make_Model = X2013) %>%
+  mutate(Make = word(Make_Model, 1)) %>%
+  mutate(Model = word(Make_Model, 2, -1)) %>%
+  select(Make, Model, 2:13) %>%
+  pivot_longer(cols = 3:14, names_to = 'Month', values_to = 'Sales') %>%
+  mutate(Year = 2013) %>%
+  select(Make, Model, Month, Year, Sales)
+
+df_2014 <- df_2014 %>%
+  select(1:13) %>% 
+  filter(X2014.US != 'InsideEVs' & X2014.US != 'Worldwide') %>% 
+  rename(Make_Model = X2014.US) %>%
+  mutate(Make = word(Make_Model, 1)) %>%
+  mutate(Model = word(Make_Model, 2, -1)) %>%
+  select(Make, Model, 2:13) %>%
+  pivot_longer(cols = 3:14, names_to = 'Month', values_to = 'Sales') %>%
+  mutate(Year = 2014) %>%
+  select(Make, Model, Month, Year, Sales)
+
+df_2015 <- df_2015 %>%
+  select(1:13) %>% 
+  filter(X2015.US != 'InsideEVs' & X2015.US != '2014 Results' & X2015.US != 'Worldwide*') %>% 
+  rename(Make_Model = X2015.US) %>%
+  mutate(Make = word(Make_Model, 1)) %>%
+  mutate(Model = word(Make_Model, 2, -1)) %>%
+  select(Make, Model, 2:13) %>%
+  pivot_longer(cols = 3:14, names_to = 'Month', values_to = 'Sales') %>%
+  mutate(Year = 2015) %>%
+  select(Make, Model, Month, Year, Sales)
+
+
+df_2016 <- df_2016 %>%
+  select(1:13) %>% 
+  filter(X2016.US != 'InsideEVs' & X2016.US != '2015 Results' & X2016.US != 'Worldwide*') %>% 
+  rename(Make_Model = X2016.US) %>%
+  mutate(Make = word(Make_Model, 1)) %>%
+  mutate(Model = word(Make_Model, 2, -1)) %>%
+  select(Make, Model, 2:13) %>%
+  pivot_longer(cols = 3:14, names_to = 'Month', values_to = 'Sales') %>%
+  mutate(Year = 2016) %>%
+  select(Make, Model, Month, Year, Sales)
+
+
+df_2017 <- df_2017 %>%
+  select(1:13) %>% 
+  filter(X2017.U.S..EV.SALES != '2017 U.S. Sales Totals' & X2017.U.S..EV.SALES != '2016 U.S. Sales Totals' & X2017.U.S..EV.SALES != '2017 Worldwide Sales*') %>% 
+  rename(Make_Model = X2017.U.S..EV.SALES) %>%
+  mutate(Make = word(Make_Model, 1)) %>%
+  mutate(Model = word(Make_Model, 2, -1)) %>%
+  select(Make, Model, 2:13) %>%
+  pivot_longer(cols = 3:14, names_to = 'Month', values_to = 'Sales') %>%
+  mutate(Year = 2017) %>%
+  select(Make, Model, Month, Year, Sales)
+
+
+df_2018 <- df_2018 %>%
+  select(1:13) %>% 
+  filter(X2018.U.S..EV.SALES != '2018 U.S. Sales Totals' & X2018.U.S..EV.SALES != '2017 U.S. Sales Totals' & X2018.U.S..EV.SALES != '2018 Worldwide Sales*') %>% 
+  rename(Make_Model = X2018.U.S..EV.SALES) %>%
+  mutate(Make = word(Make_Model, 1)) %>%
+  mutate(Model = word(Make_Model, 2, -1)) %>%
+  select(Make, Model, 2:13) %>%
+  pivot_longer(cols = 3:14, names_to = 'Month', values_to = 'Sales') %>%
+  mutate(Year = 2018) %>%
+  select(Make, Model, Month, Year, Sales)
+
+df_2019 <- df_2019 %>%
+  select(2:14) %>% 
+  filter(X != '2019 U.S. Sales Totals*' & X != '2018 U.S. Sales Totals*' & X != '2019 Worldwide Sales*' & X != '2018 Worldwide Sales*') %>% 
+  rename(Make_Model = X) %>%
+  mutate(Make = word(Make_Model, 1)) %>%
+  mutate(Model = word(Make_Model, 2, -1)) %>%
+  select(Make, Model, 2:13) %>%
+  pivot_longer(cols = 3:14, names_to = 'Month', values_to = 'Sales') %>%
+  mutate(Year = 2019) %>%
+  select(Make, Model, Month, Year, Sales)
+
+
+
+df_2019[] <- lapply(df_2019, gsub, pattern = '\U0001f50b', replacement = '')
+
+  
+
 
 ```
