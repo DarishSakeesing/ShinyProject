@@ -170,6 +170,11 @@ df_2017 <- create_date(df_2017)
 df_2018 <- create_date(df_2018)
 df_2019 <- create_date(df_2019)
 
+```
 
+```{r Combining the data into a single CSV}
 
+cleaned_total_df <- rbind(df_2012, df_2013, df_2014, df_2015, df_2016, df_2017, df_2018, df_2019)
+
+write.csv(cleaned_total_df,"data/cleaned_data.csv")
 ```
