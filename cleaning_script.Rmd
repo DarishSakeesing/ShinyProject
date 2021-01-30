@@ -177,4 +177,13 @@ df_2019 <- create_date(df_2019)
 cleaned_total_df <- rbind(df_2012, df_2013, df_2014, df_2015, df_2016, df_2017, df_2018, df_2019)
 
 write.csv(cleaned_total_df,"data/cleaned_data.csv")
+
+```
+```{r Cleaning cumulative sales file}
+df <- read.csv('data/cumulative_sales.csv') %>% 
+  mutate(PHEV = as.numeric(gsub(',', '', df$PHEV)), BEV = as.numeric(gsub(',', '', df$BEV))) %>%
+  mutate(Total = PHEV + BEV)
+
+write.csv(df,"data/cumSales.csv")
+
 ```
