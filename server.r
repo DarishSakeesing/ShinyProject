@@ -10,6 +10,7 @@
 library(shiny)
 library(dplyr)
 library(ggplot2)
+library(tidyr)
 
 cumDF <- read.csv('data/cumSales.csv')
 totalDF <- read.csv('data/totalSales.csv')
@@ -38,4 +39,12 @@ shinyServer(function(input, output) {
     
 
     })
+    
+    output$salesGraph <- renderPlot({
+                          topdf[1:input$n,] %>% ggplot(aes(x = Make, y = TotalSales)) + geom_col()
+        
+        
+    }
+        
+    )
 })

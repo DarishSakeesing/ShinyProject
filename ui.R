@@ -10,7 +10,7 @@ library(shinymaterial)
 # Define UI for application that draws a histogram
 shinyUI(
     
-    fluidPage(theme = shinytheme('darkly'),
+    fluidPage(theme =shinytheme('superhero'),
               
               navbarPage(
                   
@@ -18,7 +18,7 @@ shinyUI(
 
                   tabPanel('Brief Overview',
                            fluidRow(
-                               column(width = 6,
+                               column(width = 8,
 
                                    fluidRow(
                                        h2('Types of EV'),
@@ -32,7 +32,7 @@ shinyUI(
                                          lifestyle depends on your needs and driving habits.')
                                        )
                                ),
-                               column(width = 6,
+                               column(width = 4,
                                       img(src = 'https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&aut
                                           o=format&fit=crop&w=1952&q=80',
                                           height = '40%',
@@ -57,13 +57,24 @@ shinyUI(
                                       
                                     ),
                              column(3,
-                                    radioButtons('choose', label = 'Choose Plot', choices = c('Cumulative Sales', 'Total Sales'),
-                                                 selected = 'Cumulative Sales')
+                                     radioButtons('choose', label = 'Choose Plot', choices = c('Cumulative Sales', 'Total Sales'),
+                                               selected = 'Cumulative Sales')
                                     )
                            )
                 ),
+                
 
-                  tabPanel('Second',
+                  tabPanel('Industry Leaders',
+                           
+                           fluidRow(
+                             h1('Most Successful Automakers by Sale Numbers')
+                           ),
+                           
+                           fluidRow(
+                             numericInput('n', 'Top n manufacturers', n),
+                             plotOutput('salesGraph')
+                           )
+                           
                            
                            ),
                   tabPanel('Third')
