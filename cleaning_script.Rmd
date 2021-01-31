@@ -205,3 +205,31 @@ df$Date <- as.Date(as.yearmon(df$Date))
 write.csv(df,"data/cumSales.csv")
 
 ```
+
+
+```{r Car Specs Cleaning}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(stringi)
+
+top_speed_df <- read.csv('data/top_speed.csv')
+
+top_speed_df<- top_speed_df %>% filter(Top.Speed..km.h. != 'Average') %>% mutate(Make = word(Car, 1), Model = word(Car, 2, -1)) %>% mutate(Speed = as.numeric(Top.Speed..km.h.)) %>% select(Make, Model, Speed) %>% mutate(Model = toupper(Model))
+
+testdf <- cleaned_df %>%
+  mutate(Sales = gsub(',', '', cleaned_df$Sales)) %>%
+  mutate(Sales = as.numeric(Sales)) %>%
+  na.omit(cleaned_df)
+
+testdf$Model <- str_replace(testdf$Model, '\\*', '')
+testdf$Model <- toupper(testdf$Model)
+testdf$Model <- str_trim(testdf$Model)
+
+
+
+salesdf <- testdf %>% group_by(Make, Model) %>% summarise(TotalSales = sum(Sales))
+
+salesdf <- salesdf[order(salesdf$TotalSales, decreasing = T),]
+
+```
