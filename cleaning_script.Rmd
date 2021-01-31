@@ -183,6 +183,7 @@ write.csv(cleaned_total_df,"data/cleaned_data.csv")
 library(dplyr)
 library(ggplot2)
 library(stringr)
+library(xts)
 
 df <- read.csv('data/cumulative_sales.csv') %>% 
   mutate(PHEV = as.numeric(gsub(',', '', df$PHEV)), BEV = as.numeric(gsub(',', '', df$BEV))) %>%
@@ -194,7 +195,12 @@ df <- df %>%
   mutate(Month = month1, Year = as.numeric(Year) + 2000) %>%
   select(Month, Year, PHEV, BEV, Percent.EV, Total)
 
+
 df$Date <- create_date(df)
+
+df <- read.csv('data/cumSales.csv')
+
+df$Date <- as.Date(as.yearmon(df$Date))
 
 write.csv(df,"data/cumSales.csv")
 
