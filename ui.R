@@ -5,6 +5,7 @@ library(shinyWidgets)
 library(shinydashboard)
 library(shinydashboardPlus)
 library(shinymaterial)
+library(rsconnect)
 
 
 # Define UI for application that draws a histogram
@@ -71,13 +72,82 @@ shinyUI(
                            ),
                            
                            fluidRow(
+                             column(4,
+                                    HTML(
+                                      '<div class="card text-white bg-warning mb-3" style="max-width: 20rem;padding: 5%">
+                                        <div class="card-header">1st</div>
+                                        <div class="card-body">
+                                        <h4 class="card-title">TESLA</h4>
+                                        <p class="card-text">Founded in July 2003 as Tesla Motors, the company\'s name is 
+                                        a tribute to inventor and electrical engineer Nikola Tesla. Elon Musk, who 
+                                        contributed most of the funding in the early days, has served as CEO since 2008.</p>
+                                        </div>
+                                      </div>')
+                                    ),
+                             column(4,
+                                    HTML(
+                                      '<div style="max-width: 20rem; background-color:#C0C0C0; padding: 5%">
+                                        <div class="card-header">2nd</div>
+                                        <div class="card-body">
+                                        <h4 class="card-title">CHEVROLET</h4>
+                                        <p class="card-text">Chevrolet, colloquially referred to as Chevy is an American automobile division of the American manufacturer General Motors (GM). 
+                                        Louis Chevrolet started the company on November 3, 1911.</p>
+                                        </div>
+                                      </div>')
+                                    ),
+                             column(4,
+                                    HTML(
+                                      '<div style="max-width: 20rem; background-color:#CD7F32; padding: 5%">
+                                        <div class="card-header">3rd</div>
+                                        <div class="card-body">
+                                        <h4 class="card-title">NISSAN</h4>
+                                        <p class="card-text">The Nissan Motor Company, trading as the Nissan Motor Corporation, is a Japanese multinational 
+                                        automobile manufacturer headquartered in Nishi-ku, Yokohama, Japan.</p>
+                                        </div>
+                                      </div>')
+                                    )
+                           ),
+                           fluidRow(
+                             hr()
+                           ),
+                           
+                           fluidRow(
                              numericInput('n', 'Top n manufacturers', n),
                              plotOutput('salesGraph')
+                           ),
+                           
+                           fluidRow(
+                             hr()
+                           ),
+                           
+                           fluidRow(
+                             numericInput('x', 'Top n models', n),
+                             plotOutput('top10models')
                            )
                            
                            
                            ),
-                  tabPanel('Third')
+                  tabPanel('Analyzing Demand',
+                           titlePanel('What do consumers want?'),
+                           
+                           p('Despite the strides made by automakers, EV sales account for about 1% of the market share. 
+                             Could it be that automakers just do not understand what the market want?'),
+                           p('According to a survey of 1000 participants, the specs for an EV to be attractive are
+                             at least 319 miles on battery and not higher than $36,000'),
+                           
+                           hr(),
+                           
+                           fluidRow(
+                             h4('Current Market'),
+                             plotOutput('currentMarket')
+                           ),
+                           fluidRow(
+                             p('Tesla Model 3 is the closest to the sweet spot and therefore it is not surprising that
+                               it is the highest selling EV car. In my opinion, the market is underserved and therefore
+                               causing a slow adoption rate.')
+                           )
+                           )
+                
               )
     )
 )
