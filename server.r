@@ -1,4 +1,4 @@
-#
+
 # This is the server logic of a Shiny web application. You can run the
 # application by clicking 'Run App' above.
 #
@@ -11,59 +11,88 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
-source('human_readeable.r')
-source('studio_connect.r')
+library(scales)
+#source('human_readeable.r')
+#source('studio_connect.r')
 
-cumDF <- read.csv('data/cumSales.csv')
-totalDF <- read.csv('data/totalSales.csv')
+salesDF <- read.csv('data/new_data/sales_cleaned.csv')
+yoyDF <- read.csv('data/new_data/YoY_Sales.csv')
+top_3 <- yoyDF %>% mutate(SALES = Y2012+Y2013+Y2014+Y2015+Y2016+Y2017+Y2018+Y2019) %>% arrange(desc(SALES)) %>% 
+    select(MAKE, MODEL, SALES)
+
+specs <- read.csv('data/new_data/car_specs.csv')
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-
-    output$cumPlot <- renderPlot({
-       
-        cumDF %>% na.omit(cumDF) %>%
-            mutate(Date = as.Date(Date)) %>%
-            pivot_longer(cols = c('PHEV', 'BEV'), names_to = 'Type', values_to = 'Sales') %>%
-            ggplot(aes(x= Date, y = Sales, color = Type)) + geom_col() +
-            theme_dark() + abline(h = 1000000, col = 'red')
-
-
+    
+    output$marketShare <- renderPlot({
+        salesDF %>% ggplot(aes(x=Year, y=as.numeric(PctEV))) + geom_col() + ylab('EV as Percentage of Total Car Sales') +
+            scale_x_continuous(breaks = seq(2011, 2019, by=1)) + ggtitle('EV Market Share in the United States') + scale_y_continuous(breaks=seq(0, 2, by=0.3))
     })
     
-    output$totalPlot <- renderPlot({
-        
-        totalDF %>% 
-            mutate(Date = as.Date(Date, '%m/%d/%y')) %>%
-            pivot_longer(cols = c('Sales_PHEV', 'Sales_BEV'), names_to = 'Type', values_to = 'Sales') %>%
-            ggplot(aes(x= Date, y = Sales, color = Type)) + geom_col() +
-            theme_dark()
-    
-
+    output$first <- renderInfoBox({
+        infoBox(
+            value=top_3$MODEL[1], subtitle=format(top_3$SALES[1], nsmall = 0, big.mark = ','), title = top_3$MAKE[1],
+            fill=TRUE, icon = icon('trophy', lib='font-awesome'), color = 'orange'
+        )
+ 
     })
     
-    output$salesGraph <- renderPlot({
-            topdf[1:input$n,] %>%
-            mutate(Rank = as.factor(rank(-TotalSales))) %>%
-            ggplot(aes(x = Make, y = TotalSales, fill = Rank)) + 
-            geom_col() + scale_y_continuous(labels = human_num)+
-            theme_dark()
-    }
+    output$second <- renderInfoBox({
+        infoBox(
+            value=top_3$MODEL[2], subtitle=format(top_3$SALES[2], nsmall = 0, big.mark = ','), title = top_3$MAKE[2],
+            fill=FALSE, icon = icon('medal', lib='font-awesome'), color = 'light-blue'
+        )
         
-    )
+    })
     
-    output$top10models <- renderPlot({
+    output$third <- renderInfoBox({
+        infoBox(
+            value=top_3$MODEL[3], subtitle=format(top_3$SALES[3], nsmall = 0, big.mark = ','), title = top_3$MAKE[3],
+            fill=FALSE, icon = icon('award', lib='font-awesome'), color = 'light-blue'
+        )
         
-        testdf[1:input$x,] %>% ggplot(aes(x = Model, y = TotalSales, fill=Make)) +
-            geom_col() + theme_dark()
-        
-    }
-        
-    )
+    })
     
-    output$currentMarket <- renderPlot({
-        top10models %>% ggplot(aes(x = Range, y=Price, color=Make)) + geom_point() +geom_label(aes(label=Model), vjust = 1) +
-            annotate('text', x = 319, y = 36000, label='Sweet Spot', color = 'orange') +  ylab('Price($)') + xlab('Range(mi)') + theme_dark()
+    output$salesHist <- renderPlot({
+        top_n(top_3, 10) %>% ggplot(aes(x=MODEL, y=SALES)) + geom_col(aes(fill=MAKE)) +
+            ggtitle('EV Sales by Model and Brand') + 
+            scale_y_continuous(labels = label_comma())
+    })
+    
+    output$relationship <- renderPlot({
+        if(input$choose_plot == 'Sales vs MSRP') {
+            specs %>% ggplot(aes(x=MSRP, y=SALES)) + 
+                geom_point(aes(color=MAKE)) + 
+                scale_y_continuous(labels=label_comma()) + 
+                xlab('MSRP($)') + 
+                scale_x_continuous(labels=label_dollar()) + 
+                geom_text(aes(label=ifelse(SALES>100000,MODEL,'')), hjust=0.5, vjust=1.5)
+        } else if(input$choose_plot == 'Sales vs Range') {
+            specs %>% ggplot(aes(x=RANGE, y=SALES)) + 
+                geom_point(aes(color=MAKE)) + 
+                scale_y_continuous(labels=label_comma()) + 
+                xlab('Range(Mi)') + 
+                geom_text(aes(label=ifelse(RANGE>250,MODEL,'')), hjust=0.5, vjust=1.5)
+        } else {
+            specs %>% ggplot(aes(x=RANGE, y=MSRP)) + 
+                geom_point(aes(color=SALES)) + 
+                scale_y_continuous(labels=label_comma()) + 
+                xlab('Range(Mi)') + 
+                geom_text(aes(label=ifelse(RANGE>250,MODEL,'')), hjust=0.5, vjust=1.5)
+        }
+        
+    })
+    
+    output$demand <- renderPlot({
+        
+        specs %>% ggplot(aes(x=RANGE, y=MSRP)) + 
+            geom_point() + 
+            scale_y_continuous(labels=label_dollar()) + 
+            xlab('Range(Mi)') + 
+            geom_text(aes(label=ifelse((RANGE>250 | (MSRP <= 50000 & MSRP >= 30000)),MODEL,'')), hjust=0.5, vjust=1.5) +
+            geom_rect(xmin=319, xmax=600, ymax=40000, ymin=0, fill='orange', alpha=0.01)
         
     })
 })
