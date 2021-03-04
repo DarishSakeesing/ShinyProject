@@ -19,4 +19,4 @@ to create an interactive web dashboard to present findings.
 
 ## More information
 If you ever need the data, feel free to reach out to me on [LinkedIn.](https://www.linkedin.com/in/darish-sakeesing/)
-You can also visit the app at [Shiny App,](https://darish-sakeesing.shinyapps.io/EV_Revolution/?_ga=2.88142811.1359606582.1614815931-454913485.1614815931) and read my [blog](https://nycdatascience.com/blog/student-works/electric-vehicles-whats-preventing-mass-adoption/) for my analysis.
+You can also visit the app at [Shiny App,](https://darish-sakeesing.shinyapps.io/EV_Revolution/?_ga=2.88142811.1359606582.1614815931-454913485.1614815931) and read my [blog post](https://nycdatascience.com/blog/student-works/electric-vehicles-whats-preventing-mass-adoption/) for my analysis.
