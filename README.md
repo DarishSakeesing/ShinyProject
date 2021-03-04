@@ -13,6 +13,10 @@ To understand the reasons, I analyzed the current state of the EV market and dra
 The data used in this analysis come from multiple sources. They are Statista, the US Department of Transport, InsideEVs.com and Evadoption.com
 All preprocessing and transformations were done by me. If you ever need the data, feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/darish-sakeesing/)
 
-### Tools
+### Programming Language
 The analysis is done in R and the app is using the shiny library. This library when used with others like shinydashboard, is powerful enough
 to create an interactive web dashboard to present findings. 
+
+## More information
+If you ever need the data, feel free to reach out to me on [LinkedIn.](https://www.linkedin.com/in/darish-sakeesing/)
+You can also visit the app at [Shiny App,](https://darish-sakeesing.shinyapps.io/EV_Revolution/?_ga=2.88142811.1359606582.1614815931-454913485.1614815931) and read my [blog](https://nycdatascience.com/blog/student-works/electric-vehicles-whats-preventing-mass-adoption/) for my analysis.
