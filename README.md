@@ -11,7 +11,7 @@ To understand the reasons, I analyzed the current state of the EV market and dra
 ## Tools Used
 ### Data
 The data used in this analysis come from multiple sources. They are Statista, the US Department of Transport, InsideEVs.com and Evadoption.com
-All preprocessing and transformations were done by me.
+All preprocessing and transformations were done by me. If you ever need the data, feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/darish-sakeesing/)
 
 ### Tools
 The analysis is done in R and the app is using the shiny library. This library when used with others like shinydashboard, is powerful enough
